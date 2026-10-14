@@ -1,0 +1,7 @@
+pandas
+scikit-learn
+python-dotenv
+pytest
+fastapi
+httpx
+mlflow

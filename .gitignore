@@ -1,0 +1,27 @@
+
+# Secrets and environment variables
+.env
+.env.*
+
+# MLflow local tracking data
+mlflow.db
+mlflow.db-*
+mlruns/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Logs
+logs/
+*.log
+
+# Model and dataset files
+models/
+data/
