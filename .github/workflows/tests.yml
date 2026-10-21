@@ -24,8 +24,11 @@ jobs:
           pip install -r requirements.txt
           pip install pytest httpx
 
+      - name: Generate model artifact
+        run: python src/save_model.py
+
       - name: Run tests
         run: python -m pytest -v
-      
+
       - name: Build Docker image
         run: docker build -t production-ml-api .

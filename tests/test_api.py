@@ -3,8 +3,6 @@ from fastapi.testclient import TestClient
 
 from src.main import app
 
-
-# Create test client
 client = TestClient(app)
 
 
@@ -12,27 +10,56 @@ def test_home():
     response = client.get("/")
 
     assert response.status_code == 200
-    assert response.json() == {
-        "message": "ML API is running"
-    }
+    assert "API is running" in response.json()["message"]
 
 
 def test_health():
     response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {
-        "status": "healthy"
+    assert response.json() == {"status": "healthy"}
+
+
+def test_prediction():
+    payload = {
+        "MedInc": 5.0,
+        "HouseAge": 20.0,
+        "AveRooms": 5.0,
+        "AveBedrms": 1.0,
+        "Population": 1000.0,
+        "AveOccup": 3.0,
+        "Latitude": 34.0,
+        "Longitude": -118.0
     }
 
-
-# Test ML prediction endpoint
-def test_prediction():
-    response = client.get("/predict?size=2200")
+    response = client.post("/predict", json=payload)
 
     assert response.status_code == 200
 
     data = response.json()
 
-    assert data["house_size"] == 2200.0
-    assert data["predicted_price"] == 110.0
+    assert data["predicted_median_house_value_units"] == 2.4731
+    assert data["predicted_median_house_value_dollars"] == 247310.87
+
+
+def test_prediction_rejects_missing_features():
+    response = client.post("/predict", json={"MedInc": 5.0})
+
+    assert response.status_code == 422
+
+
+def test_prediction_rejects_invalid_latitude():
+    payload = {
+        "MedInc": 5.0,
+        "HouseAge": 20.0,
+        "AveRooms": 5.0,
+        "AveBedrms": 1.0,
+        "Population": 1000.0,
+        "AveOccup": 3.0,
+        "Latitude": 90.0,
+        "Longitude": -118.0
+    }
+
+    response = client.post("/predict", json=payload)
+
+    assert response.status_code == 422
