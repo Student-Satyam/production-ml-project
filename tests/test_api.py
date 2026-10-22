@@ -63,3 +63,17 @@ def test_prediction_rejects_invalid_latitude():
     response = client.post("/predict", json=payload)
 
     assert response.status_code == 422
+
+
+
+def test_metrics_endpoint():
+    response = client.get("/metrics")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "prediction_requests_total" in data
+    assert "prediction_success_total" in data
+    assert "prediction_failures_total" in data
+    assert "prediction_latency_average_seconds" in data
