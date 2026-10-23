@@ -5,3 +5,4 @@ pytest
 fastapi
 httpx
 mlflow
+prometheus-client==0.26.0
